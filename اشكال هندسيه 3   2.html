@@ -1,0 +1,982 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>عالم الأشكال الهندسية الممتع للأطفال 🌟</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Google Fonts: Fredoka & Changanga for playful Arabic typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Changa:wght@500;700;800&family=Fredoka:wght@500;700&display=swap" rel="stylesheet">
+
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Three.js for Interactive 3D Shapes -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+
+    <!-- Canvas Confetti for winning celebrations -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        kidsYellow: '#FFDE59',
+                        kidsPink: '#FF66C4',
+                        kidsBlue: '#5271FF',
+                        kidsGreen: '#00C2CB',
+                        kidsPurple: '#8C52FF',
+                        kidsOrange: '#FF914D',
+                    },
+                    fontFamily: {
+                        kids: ['Changa', 'Fredoka', 'sans-serif'],
+                    },
+                    animation: {
+                        'float': 'floating 3s ease-in-out infinite',
+                        'bounce-slow': 'bounce 2s infinite',
+                        'wiggle': 'wiggle 0.5s ease-in-out infinite',
+                    },
+                    keyframes: {
+                        floating: {
+                            '0%, 100%': { transform: 'translateY(0px) rotate(0deg)' },
+                            '50%': { transform: 'translateY(-12px) rotate(3deg)' },
+                        },
+                        wiggle: {
+                            '0%, 100%': { transform: 'rotate(-3deg)' },
+                            '50%': { transform: 'rotate(3deg)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            font-family: 'Changa', sans-serif;
+            background: linear-gradient(135deg, #FFF9E6 0%, #E8F9FF 50%, #FFEBF6 100%);
+            min-height: 100vh;
+            user-select: none;
+        }
+
+        /* Floating background decoration elements */
+        .bg-decorations {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .floating-star {
+            position: absolute;
+            animation: floating 4s ease-in-out infinite;
+            opacity: 0.6;
+        }
+
+        /* Interactive Card Bounce Effect */
+        .kids-card {
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .kids-card:hover {
+            transform: translateY(-8px) scale(1.02);
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 12px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #FFEBF6;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #FF66C4;
+            border-radius: 20px;
+            border: 3px solid #FFEBF6;
+        }
+
+        /* Printable Sheet Formatting */
+        @media print {
+            .no-print { display: none !important; }
+            .print-only { display: block !important; }
+            body { background: white !important; }
+            .print-card {
+                page-break-inside: avoid;
+                border: 2px solid #FF914D !important;
+                border-radius: 16px !important;
+                margin-bottom: 20px !important;
+                padding: 15px !important;
+            }
+        }
+
+        .canvas-3d-box {
+            position: relative;
+            width: 100%;
+            height: 200px;
+            background: radial-gradient(circle, rgba(255,255,255,0.9) 0%, rgba(240,248,255,0.7) 100%);
+            border-radius: 1.25rem;
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body class="text-slate-800 relative pb-12 overflow-x-hidden">
+
+    <!-- Background Floating Decorative Elements -->
+    <div class="bg-decorations">
+        <i class="fa-solid fa-star text-kidsYellow text-3xl floating-star" style="top: 10%; right: 5%; animation-delay: 0s;"></i>
+        <i class="fa-solid fa-cloud text-white text-5xl floating-star" style="top: 15%; left: 8%; animation-delay: 1s;"></i>
+        <i class="fa-solid fa-heart text-kidsPink text-2xl floating-star" style="top: 60%; right: 8%; animation-delay: 2s;"></i>
+        <i class="fa-solid fa-shapes text-kidsPurple text-3xl floating-star" style="top: 75%; left: 6%; animation-delay: 1.5s;"></i>
+        <i class="fa-solid fa-sparkles text-kidsOrange text-2xl floating-star" style="top: 40%; right: 3%; animation-delay: 2.5s;"></i>
+        <i class="fa-solid fa-sun text-kidsYellow text-4xl floating-star" style="top: 5%; left: 45%; animation-delay: 0.5s;"></i>
+    </div>
+
+    <!-- Top Navigation Header -->
+    <header class="no-print sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b-4 border-kidsYellow shadow-md">
+        <div class="max-w-7xl mx-auto px-4 py-3 flex flex-wrap items-center justify-between gap-4">
+            
+            <!-- Logo -->
+            <div class="flex items-center gap-3">
+                <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-kidsPink to-kidsYellow flex items-center justify-center text-white text-2xl shadow-md animate-bounce-slow">
+                    🎨
+                </div>
+                <div>
+                    <h1 class="text-2xl sm:text-3xl font-extrabold text-kidsPurple drop-shadow-sm">
+                        عالم الأشكال المرحة! ✨
+                    </h1>
+                    <p class="text-xs sm:text-sm font-bold text-kidsOrange">تعلم وفكر والعب مع الأشكال الهندسية 🚀</p>
+                </div>
+            </div>
+
+            <!-- Top Action Buttons -->
+            <div class="flex items-center gap-2 sm:gap-3">
+                <button onclick="playAudioText('مرحباً بكم يا أصدقائي في عالم الأشكال الهندسية!')" 
+                        class="p-2.5 rounded-2xl bg-kidsYellow hover:bg-yellow-400 text-slate-800 font-bold text-sm shadow-md transition active:scale-95 flex items-center gap-1.5" title="ترحيب صووتي">
+                    <i class="fa-solid fa-volume-high text-lg"></i>
+                    <span class="hidden sm:inline">رحّب بنا!</span>
+                </button>
+
+                <button onclick="prepareAndPrint()" 
+                        class="px-4 py-2.5 rounded-2xl bg-gradient-to-r from-kidsGreen to-teal-500 hover:from-teal-500 hover:to-kidsGreen text-white font-extrabold text-sm shadow-lg shadow-kidsGreen/30 transition active:scale-95 flex items-center gap-2">
+                    <i class="fa-solid fa-print text-lg"></i>
+                    <span>اطبع كراسة الألوان 🖨️</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main App Layout -->
+    <main class="relative z-10 max-w-7xl mx-auto px-4 pt-6 flex flex-col gap-8">
+
+        <!-- Navigation Tabs Bar -->
+        <section class="no-print flex flex-wrap justify-center items-center gap-3 bg-white/80 p-3 rounded-3xl shadow-lg border-2 border-white">
+            <button onclick="switchTab('all')" id="tab-all" class="nav-tab px-5 py-2.5 rounded-2xl font-extrabold text-base transition shadow-md bg-kidsPurple text-white scale-105">
+                🌈 كل الأشكال (<span id="count-all">0</span>)
+            </button>
+            <button onclick="switchTab('2d')" id="tab-2d" class="nav-tab px-5 py-2.5 rounded-2xl font-extrabold text-base transition text-slate-700 hover:bg-kidsBlue/10 hover:text-kidsBlue">
+                ✏️ ثنائية الأبعاد 2D (<span id="count-2d">0</span>)
+            </button>
+            <button onclick="switchTab('3d')" id="tab-3d" class="nav-tab px-5 py-2.5 rounded-2xl font-extrabold text-base transition text-slate-700 hover:bg-kidsPink/10 hover:text-kidsPink">
+                🧊 ثلاثية الأبعاد 3D (<span id="count-3d">0</span>)
+            </button>
+            <button onclick="switchTab('quiz')" id="tab-quiz" class="nav-tab px-5 py-2.5 rounded-2xl font-extrabold text-base transition text-slate-700 bg-kidsYellow/30 hover:bg-kidsYellow text-slate-800">
+                🎮 لعبة الأشكال الممتعة!
+            </button>
+        </section>
+
+        <!-- Dynamic Shapes Display Grid -->
+        <section id="shapesSection" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- Shape Cards Rendered Dynamically Here -->
+        </section>
+
+        <!-- Quiz / Game Section (Hidden by default) -->
+        <section id="quizSection" class="hidden no-print flex-col items-center max-w-3xl mx-auto w-full bg-white rounded-3xl p-6 sm:p-8 shadow-2xl border-4 border-kidsYellow relative overflow-hidden">
+            <div class="text-center mb-6">
+                <span class="bg-kidsOrange text-white text-xs font-black px-4 py-1 rounded-full uppercase tracking-wider">تحدي الأذكى 🧠</span>
+                <h2 class="text-2xl sm:text-3xl font-black text-kidsPurple mt-2">خمن اسم الشكل الهندسي! 🤔</h2>
+                <p class="text-sm font-bold text-slate-500 mt-1">اختر الإجابة الصحيحة واجمع النجوم 🌟</p>
+            </div>
+
+            <!-- Quiz Scoreboard -->
+            <div class="flex items-center justify-between w-full bg-slate-100 rounded-2xl p-4 mb-6 text-base font-extrabold">
+                <div class="text-kidsBlue"><i class="fa-solid fa-trophy text-kidsYellow text-xl"></i> النتيجة: <span id="quizScore" class="text-2xl text-kidsPurple">0</span></div>
+                <div class="text-kidsOrange">السؤال <span id="quizCurrent">1</span> من <span id="quizTotal">5</span></div>
+            </div>
+
+            <!-- Quiz Display Window -->
+            <div id="quizQuestionBox" class="w-full flex flex-col items-center justify-center bg-slate-50 border-2 border-dashed border-kidsBlue rounded-2xl p-6 mb-6">
+                <div id="quizShapeGraphic" class="w-48 h-48 flex items-center justify-center mb-4">
+                    <!-- SVG / Three.js Preview for quiz -->
+                </div>
+                <p id="quizHint" class="text-lg font-bold text-slate-700 text-center">...</p>
+            </div>
+
+            <!-- Quiz Options -->
+            <div id="quizOptions" class="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full">
+                <!-- Option Buttons Inserted Dynamically -->
+            </div>
+
+            <!-- Quiz Next Button -->
+            <button id="quizNextBtn" onclick="nextQuizQuestion()" class="hidden mt-6 px-8 py-3 bg-kidsGreen text-white font-black text-lg rounded-2xl shadow-lg hover:bg-teal-500 transition active:scale-95">
+                السؤال التالي ➔
+            </button>
+        </section>
+
+    </main>
+
+    <!-- Printable Workbook Section (Hidden on screen, styled for Print) -->
+    <div id="printSheet" class="hidden print-only p-8 bg-white text-slate-900">
+        <div class="text-center border-b-4 border-kidsYellow pb-4 mb-6">
+            <h1 class="text-3xl font-extrabold text-kidsPurple">🎨 كراسة الأشكال الهندسية الملونة للأطفال</h1>
+            <p class="text-sm font-bold text-slate-600 mt-1">تعرف على الأشكال الهندسية وخصائصها وقوانينها البسيطة</p>
+        </div>
+        <div id="printSheetList" class="grid grid-cols-2 gap-4">
+            <!-- Printable items -->
+        </div>
+    </div>
+
+    <!-- JavaScript Application Logic -->
+    <script>
+        /* =========================================================
+           1. SHAPES DATA (2D & 3D with Cartoon Eyes and Audio Greetings)
+           ========================================================= */
+        const SHAPES = [
+            // --- 2D SHAPES ---
+            {
+                id: 'square',
+                nameAr: 'المربع',
+                nameEn: 'Square',
+                category: '2d',
+                color: '#FF66C4', // Kids Pink
+                bgColor: 'bg-pink-50 border-pink-200',
+                greeting: 'أهلاً! أنا المربع! لدي أربعة أضلاع جميلة ومتساوية تماماً!',
+                specs: [
+                    { label: 'الأضلاع 📏', val: '4 أضلاع متساوية' },
+                    { label: 'الزوايا 📐', val: '4 زوايا قائمة (90°)' }
+                ],
+                calcText: 'احسب مساحتي ومحيطي بسهولة:',
+                inputs: [{ id: 'side', label: 'طول הضلع (a)', default: 5 }],
+                calculate: (v) => {
+                    const a = v.side || 0;
+                    return { 'المساحة': (a * a) + ' سم²', 'المحيط': (4 * a) + ' سم' };
+                },
+                drawSVG: () => `
+                    <svg viewBox="0 0 100 100" class="w-36 h-36 drop-shadow-md">
+                        <rect x="10" y="10" width="80" height="80" rx="12" fill="#FF66C4" stroke="#D81B60" stroke-width="4"/>
+                        <!-- Cute Eyes & Smile -->
+                        <circle cx="35" cy="40" r="7" fill="white"/>
+                        <circle cx="65" cy="40" r="7" fill="white"/>
+                        <circle cx="37" cy="40" r="3.5" fill="#222"/>
+                        <circle cx="67" cy="40" r="3.5" fill="#222"/>
+                        <ellipse cx="28" cy="48" rx="4" ry="2" fill="#FF80AB"/>
+                        <ellipse cx="72" cy="48" rx="4" ry="2" fill="#FF80AB"/>
+                        <path d="M 38 58 Q 50 70 62 58" fill="none" stroke="#222" stroke-width="3.5" stroke-linecap="round"/>
+                    </svg>`
+            },
+            {
+                id: 'circle',
+                nameAr: 'الدائرة',
+                nameEn: 'Circle',
+                category: '2d',
+                color: '#FFDE59', // Kids Yellow
+                bgColor: 'bg-yellow-50 border-yellow-200',
+                greeting: 'مرحباً! أنا الدائرة! تدور وتدور بلا زوايا أو أضلاع حادة!',
+                specs: [
+                    { label: 'الأضلاع 📏', val: '0 (منحنى مغلق)' },
+                    { label: 'الرؤوس 📐', val: '0' }
+                ],
+                calcText: 'احسب مساحتي ومحيطي برقم نصف القطر:',
+                inputs: [{ id: 'r', label: 'نصف القطر (نق)', default: 4 }],
+                calculate: (v) => {
+                    const r = v.r || 0;
+                    return { 'المساحة': (Math.PI * r * r).toFixed(1) + ' سم²', 'المحيط': (2 * Math.PI * r).toFixed(1) + ' سم' };
+                },
+                drawSVG: () => `
+                    <svg viewBox="0 0 100 100" class="w-36 h-36 drop-shadow-md">
+                        <circle cx="50" cy="50" r="42" fill="#FFDE59" stroke="#E65100" stroke-width="4"/>
+                        <!-- Cartoon Face -->
+                        <circle cx="35" cy="42" r="6" fill="white"/>
+                        <circle cx="65" cy="42" r="6" fill="white"/>
+                        <circle cx="37" cy="42" r="3" fill="#222"/>
+                        <circle cx="67" cy="42" r="3" fill="#222"/>
+                        <path d="M 40 60 Q 50 72 60 60" fill="none" stroke="#222" stroke-width="3.5" stroke-linecap="round"/>
+                        <circle cx="50" cy="65" r="3" fill="#FF5252"/>
+                    </svg>`
+            },
+            {
+                id: 'triangle',
+                nameAr: 'المثلث',
+                nameEn: 'Triangle',
+                category: '2d',
+                color: '#5271FF', // Kids Blue
+                bgColor: 'bg-blue-50 border-blue-200',
+                greeting: 'أهلاً بكم! أنا المثلث! أقوى شكل بأربعة رؤوس وثلاثة أضلاع متينة!',
+                specs: [
+                    { label: 'الأضلاع 📏', val: '3 أضلاع' },
+                    { label: 'الزوايا 📐', val: '3 زوايا مجموعها 180°' }
+                ],
+                calcText: 'احسب مساحة المثلث القوي:',
+                inputs: [
+                    { id: 'b', label: 'القاعدة (b)', default: 6 },
+                    { id: 'h', label: 'الارتفاع (h)', default: 5 }
+                ],
+                calculate: (v) => {
+                    const b = v.b || 0, h = v.h || 0;
+                    return { 'المساحة': (0.5 * b * h).toFixed(1) + ' سم²' };
+                },
+                drawSVG: () => `
+                    <svg viewBox="0 0 100 100" class="w-36 h-36 drop-shadow-md">
+                        <polygon points="50,8 10,88 90,88" fill="#5271FF" stroke="#1A237E" stroke-width="4" stroke-linejoin="round"/>
+                        <!-- Cute Face -->
+                        <circle cx="40" cy="52" r="6" fill="white"/>
+                        <circle cx="60" cy="52" r="6" fill="white"/>
+                        <circle cx="41" cy="52" r="3" fill="#222"/>
+                        <circle cx="61" cy="52" r="3" fill="#222"/>
+                        <path d="M 42 68 Q 50 76 58 68" fill="none" stroke="#222" stroke-width="3" stroke-linecap="round"/>
+                    </svg>`
+            },
+            {
+                id: 'rectangle',
+                nameAr: 'المستطيل',
+                nameEn: 'Rectangle',
+                category: '2d',
+                color: '#00C2CB', // Kids Green
+                bgColor: 'bg-teal-50 border-teal-200',
+                greeting: 'أنا المستطيل! شقيق المربع ولكن لدي ضلعان طويلان وضلعان قصيران!',
+                specs: [
+                    { label: 'الأضلاع 📏', val: '4 (كل 2 متقابلين متساويين)' },
+                    { label: 'الزوايا 📐', val: '4 زوايا قائمة' }
+                ],
+                calcText: 'احسب مساحتي ومحيطي:',
+                inputs: [
+                    { id: 'l', label: 'الطول (l)', default: 8 },
+                    { id: 'w', label: 'العرض (w)', default: 4 }
+                ],
+                calculate: (v) => {
+                    const l = v.l || 0, w = v.w || 0;
+                    return { 'المساحة': (l * w) + ' سم²', 'المحيط': (2 * (l + w)) + ' سم' };
+                },
+                drawSVG: () => `
+                    <svg viewBox="0 0 120 90" class="w-40 h-32 drop-shadow-md">
+                        <rect x="8" y="15" width="104" height="60" rx="10" fill="#00C2CB" stroke="#004D40" stroke-width="4"/>
+                        <!-- Cute Face -->
+                        <circle cx="45" cy="40" r="6" fill="white"/>
+                        <circle cx="75" cy="40" r="6" fill="white"/>
+                        <circle cx="47" cy="40" r="3" fill="#222"/>
+                        <circle cx="77" cy="40" r="3" fill="#222"/>
+                        <path d="M 50 56 Q 60 66 70 56" fill="none" stroke="#222" stroke-width="3" stroke-linecap="round"/>
+                    </svg>`
+            },
+            {
+                id: 'star',
+                nameAr: 'النجمة',
+                nameEn: 'Star',
+                category: '2d',
+                color: '#FF914D', // Kids Orange
+                bgColor: 'bg-orange-50 border-orange-200',
+                greeting: 'أهلاً! أنا النجمة المضيئة برؤوسي الخمسة الجذابة اللامعة!',
+                specs: [
+                    { label: 'الرؤوس 🌟', val: '5 رؤوس بارزة' },
+                    { label: 'الأضلاع 📏', val: '10 أضلاع متقاطعة' }
+                ],
+                calcText: 'احسب محيط النجمة:',
+                inputs: [{ id: 's', label: 'طول الذراع (a)', default: 4 }],
+                calculate: (v) => {
+                    const s = v.s || 0;
+                    return { 'المحيط الخارجي': (10 * s) + ' سم' };
+                },
+                drawSVG: () => `
+                    <svg viewBox="0 0 100 100" class="w-36 h-36 drop-shadow-md">
+                        <polygon points="50,5 63,35 95,38 71,60 78,92 50,75 22,92 29,60 5,38 37,35" fill="#FF914D" stroke="#E65100" stroke-width="3.5" stroke-linejoin="round"/>
+                        <!-- Cute Face -->
+                        <circle cx="42" cy="45" r="5" fill="white"/>
+                        <circle cx="58" cy="45" r="5" fill="white"/>
+                        <circle cx="43" cy="45" r="2.5" fill="#222"/>
+                        <circle cx="59" cy="45" r="2.5" fill="#222"/>
+                        <path d="M 44 56 Q 50 62 56 56" fill="none" stroke="#222" stroke-width="2.5" stroke-linecap="round"/>
+                    </svg>`
+            },
+            {
+                id: 'heart',
+                nameAr: 'القلب',
+                nameEn: 'Heart',
+                category: '2d',
+                color: '#FF486A',
+                bgColor: 'bg-rose-50 border-rose-200',
+                greeting: 'مرحباً! أنا شكل القلب المحبوب الذي يعبر عن الحب والصداقة!',
+                specs: [
+                    { label: 'الأقواس 💖', val: 'قوسين دائرين منحنيين' },
+                    { label: 'النوع 🎨', val: 'شكل هندسي منحني متماثل' }
+                ],
+                calcText: 'شكل رمزي محبوب وجميل!',
+                inputs: [{ id: 'size', label: 'حجم القلب', default: 5 }],
+                calculate: (v) => ({ 'المحبة': '100% ❤️' }),
+                drawSVG: () => `
+                    <svg viewBox="0 0 100 100" class="w-36 h-36 drop-shadow-md">
+                        <path d="M 50 88 C 20 60 5 40 20 20 C 35 5 50 25 50 25 C 50 25 65 5 80 20 C 95 40 80 60 50 88 Z" fill="#FF486A" stroke="#B71C1C" stroke-width="3.5"/>
+                        <!-- Cute Face -->
+                        <circle cx="38" cy="38" r="5" fill="white"/>
+                        <circle cx="62" cy="38" r="5" fill="white"/>
+                        <circle cx="39" cy="38" r="2.5" fill="#222"/>
+                        <circle cx="63" cy="38" r="2.5" fill="#222"/>
+                        <path d="M 42 50 Q 50 58 58 50" fill="none" stroke="#222" stroke-width="2.5" stroke-linecap="round"/>
+                    </svg>`
+            },
+            {
+                id: 'pentagon',
+                nameAr: 'الشكل الخماسي',
+                nameEn: 'Pentagon',
+                category: '2d',
+                color: '#8C52FF',
+                bgColor: 'bg-purple-50 border-purple-200',
+                greeting: 'أنا الخماسي الرائع! لدي خمسة أضلاع وخمسة زوايا متناسقة!',
+                specs: [
+                    { label: 'الأضلاع 📏', val: '5 أضلاع' },
+                    { label: 'الزوايا 📐', val: '5 زوايا (108°)' }
+                ],
+                calcText: 'احسب محيط الخماسي:',
+                inputs: [{ id: 's', label: 'طول הضلع (a)', default: 5 }],
+                calculate: (v) => ({ 'المحيط': (5 * (v.s || 0)) + ' سم' }),
+                drawSVG: () => `
+                    <svg viewBox="0 0 100 100" class="w-36 h-36 drop-shadow-md">
+                        <polygon points="50,8 92,38 76,86 24,86 8,38" fill="#8C52FF" stroke="#4A148C" stroke-width="4" stroke-linejoin="round"/>
+                        <!-- Cute Face -->
+                        <circle cx="38" cy="46" r="6" fill="white"/>
+                        <circle cx="62" cy="46" r="6" fill="white"/>
+                        <circle cx="39" cy="46" r="3" fill="#222"/>
+                        <circle cx="63" cy="46" r="3" fill="#222"/>
+                        <path d="M 42 60 Q 50 68 58 60" fill="none" stroke="#222" stroke-width="3" stroke-linecap="round"/>
+                    </svg>`
+            },
+            {
+                id: 'hexagon',
+                nameAr: 'الشكل السداسي',
+                nameEn: 'Hexagon',
+                category: '2d',
+                color: '#00B0FF',
+                bgColor: 'bg-sky-50 border-sky-200',
+                greeting: 'أنا السداسي! تشبه خلايا النحل الهندسية الرائعة بتناسق أضلاعي الستة!',
+                specs: [
+                    { label: 'الأضلاع 📏', val: '6 أضلاع' },
+                    { label: 'الزوايا 📐', val: '6 زوايا (120°)' }
+                ],
+                calcText: 'احسب محيط السداسي:',
+                inputs: [{ id: 's', label: 'طول الضلع (a)', default: 4 }],
+                calculate: (v) => ({ 'المحيط': (6 * (v.s || 0)) + ' سم' }),
+                drawSVG: () => `
+                    <svg viewBox="0 0 100 100" class="w-36 h-36 drop-shadow-md">
+                        <polygon points="50,5 88,27 88,73 50,95 12,73 12,27" fill="#00B0FF" stroke="#01579B" stroke-width="4" stroke-linejoin="round"/>
+                        <!-- Cute Face -->
+                        <circle cx="38" cy="45" r="6" fill="white"/>
+                        <circle cx="62" cy="45" r="6" fill="white"/>
+                        <circle cx="39" cy="45" r="3" fill="#222"/>
+                        <circle cx="63" cy="45" r="3" fill="#222"/>
+                        <path d="M 42 60 Q 50 68 58 60" fill="none" stroke="#222" stroke-width="3" stroke-linecap="round"/>
+                    </svg>`
+            },
+
+            // --- 3D SHAPES ---
+            {
+                id: 'cube',
+                nameAr: 'المكعب',
+                nameEn: 'Cube',
+                category: '3d',
+                color: '#FF66C4',
+                bgColor: 'bg-pink-50 border-pink-200',
+                greeting: 'مرحباً! أنا المكعب المجسم! لدي ستة أوجه مربعة متطابقة يمكنك تدويري!',
+                specs: [
+                    { label: 'الأوجه 📦', val: '6 أوجه مربعة' },
+                    { label: 'الأحرف ورؤوس 🧊', val: '12 حرف و8 رؤوس' }
+                ],
+                calcText: 'احسب حجم المكعب وسعته:',
+                inputs: [{ id: 's', label: 'طول הضلع (a)', default: 4 }],
+                calculate: (v) => ({ 'الحجم': Math.pow(v.s || 0, 3) + ' سم³' }),
+                init3D: (container) => {
+                    createCute3DScene(container, (scene) => {
+                        const geometry = new THREE.BoxGeometry(2, 2, 2);
+                        const material = new THREE.MeshStandardMaterial({ color: 0xFF66C4, roughness: 0.2, metalness: 0.1 });
+                        const mesh = new THREE.Mesh(geometry, material);
+                        scene.add(mesh);
+
+                        const edges = new THREE.EdgesGeometry(geometry);
+                        const line = new THREE.LineSegments(edges, new THREE.LineBasicMaterial({ color: 0xffffff, linewidth: 2 }));
+                        mesh.add(line);
+                        return mesh;
+                    });
+                }
+            },
+            {
+                id: 'sphere',
+                nameAr: 'الكرة',
+                nameEn: 'Sphere',
+                category: '3d',
+                color: '#FFDE59',
+                bgColor: 'bg-yellow-50 border-yellow-200',
+                greeting: 'أنا الكرة المجسمة الشبيهة بكرة القدم والكواكب الدائرية السلسة!',
+                specs: [
+                    { label: 'الأوجه ⚽', val: 'سطح كروي ناعم مغلق' },
+                    { label: 'الرؤوس 🎯', val: '0 رؤوس أو أضلاع' }
+                ],
+                calcText: 'احسب حجم الكرة الفضائية:',
+                inputs: [{ id: 'r', label: 'نصف القطر (نق)', default: 3 }],
+                calculate: (v) => ({ 'الحجم': ((4/3) * Math.PI * Math.pow(v.r || 0, 3)).toFixed(1) + ' سم³' }),
+                init3D: (container) => {
+                    createCute3DScene(container, (scene) => {
+                        const geometry = new THREE.SphereGeometry(1.5, 32, 32);
+                        const material = new THREE.MeshStandardMaterial({ color: 0xFFDE59, roughness: 0.2, metalness: 0.2 });
+                        const mesh = new THREE.Mesh(geometry, material);
+                        scene.add(mesh);
+                        return mesh;
+                    });
+                }
+            },
+            {
+                id: 'cylinder',
+                nameAr: 'الأسطوانة',
+                nameEn: 'Cylinder',
+                category: '3d',
+                color: '#00C2CB',
+                bgColor: 'bg-teal-50 border-teal-200',
+                greeting: 'أنا الأسطوانة! لدي قاعدتان دائريتان وجسم أنبوبي انسيابي!',
+                specs: [
+                    { label: 'القواعد 🔴', val: '2 دائريتان متوازيتان' },
+                    { label: 'السطح 🧻', val: 'سطح جانبي منحني' }
+                ],
+                calcText: 'احسب حجم الأسطوانة:',
+                inputs: [
+                    { id: 'r', label: 'نق القاعدة', default: 2.5 },
+                    { id: 'h', label: 'الارتفاع (h)', default: 5 }
+                ],
+                calculate: (v) => ({ 'الحجم': (Math.PI * Math.pow(v.r||0, 2) * (v.h||0)).toFixed(1) + ' سم³' }),
+                init3D: (container) => {
+                    createCute3DScene(container, (scene) => {
+                        const geometry = new THREE.CylinderGeometry(1.2, 1.2, 2.5, 32);
+                        const material = new THREE.MeshStandardMaterial({ color: 0x00C2CB, roughness: 0.3 });
+                        const mesh = new THREE.Mesh(geometry, material);
+                        scene.add(mesh);
+                        return mesh;
+                    });
+                }
+            },
+            {
+                id: 'cone',
+                nameAr: 'المخروط',
+                nameEn: 'Cone',
+                category: '3d',
+                color: '#FF914D',
+                bgColor: 'bg-orange-50 border-orange-200',
+                greeting: 'أهلاً! أنا المخروط الشبيه بقبعة أعياد الميلاد وبسكويت الآيس كريم!',
+                specs: [
+                    { label: 'القاعدة 🍦', val: '1 دائرية' },
+                    { label: 'الرأس 🔺', val: '1 مدبب في الأعلى' }
+                ],
+                calcText: 'احسب حجم مخروط الآيس كريم:',
+                inputs: [
+                    { id: 'r', label: 'نق القاعدة', default: 3 },
+                    { id: 'h', label: 'الارتفاع', default: 5 }
+                ],
+                calculate: (v) => ({ 'الحجم': ((1/3) * Math.PI * Math.pow(v.r||0, 2) * (v.h||0)).toFixed(1) + ' سم³' }),
+                init3D: (container) => {
+                    createCute3DScene(container, (scene) => {
+                        const geometry = new THREE.ConeGeometry(1.4, 2.6, 32);
+                        const material = new THREE.MeshStandardMaterial({ color: 0xFF914D, roughness: 0.3 });
+                        const mesh = new THREE.Mesh(geometry, material);
+                        scene.add(mesh);
+                        return mesh;
+                    });
+                }
+            },
+            {
+                id: 'pyramid',
+                nameAr: 'الهرم الرباعي',
+                nameEn: 'Pyramid',
+                category: '3d',
+                color: '#8C52FF',
+                bgColor: 'bg-purple-50 border-purple-200',
+                greeting: 'أنا الهرم الشامخ الشبيه بالأهرامات المصرية العظيمة ذات القيمة الهندسية!',
+                specs: [
+                    { label: 'القاعدة 📐', val: 'مربعة الشكل' },
+                    { label: 'الأوجه 🔺', val: '4 أوجه مثلثية تلتقي في الراس' }
+                ],
+                calcText: 'احسب حجم الهرم العجيب:',
+                inputs: [
+                    { id: 'b', label: 'ضلع القاعدة', default: 4 },
+                    { id: 'h', label: 'الارتفاع', default: 5 }
+                ],
+                calculate: (v) => ({ 'الحجم': ((1/3) * Math.pow(v.b||0, 2) * (v.h||0)).toFixed(1) + ' سم³' }),
+                init3D: (container) => {
+                    createCute3DScene(container, (scene) => {
+                        const geometry = new THREE.ConeGeometry(1.8, 2.4, 4);
+                        const material = new THREE.MeshStandardMaterial({ color: 0x8C52FF, roughness: 0.3 });
+                        const mesh = new THREE.Mesh(geometry, material);
+                        mesh.rotation.y = Math.PI / 4;
+                        scene.add(mesh);
+                        return mesh;
+                    });
+                }
+            },
+            {
+                id: 'cuboid',
+                nameAr: 'متوازي المستطيلات',
+                nameEn: 'Cuboid / Prism',
+                category: '3d',
+                color: '#5271FF',
+                bgColor: 'bg-blue-50 border-blue-200',
+                greeting: 'أنا متوازي المستطيلات الشبيه بصناديق الهدايا وكتبك المدرسية الجميلة!',
+                specs: [
+                    { label: 'الأوجه 📦', val: '6 أوجه مستطيلة' },
+                    { label: 'الرؤوس 📏', val: '8 رؤوس و12 حرف' }
+                ],
+                calcText: 'احسب حجم الصندوق المتوازي:',
+                inputs: [
+                    { id: 'l', label: 'الطول', default: 5 },
+                    { id: 'w', label: 'العرض', default: 3 },
+                    { id: 'h', label: 'الارتفاع', default: 4 }
+                ],
+                calculate: (v) => ({ 'الحجم': ((v.l||0) * (v.w||0) * (v.h||0)) + ' سم³' }),
+                init3D: (container) => {
+                    createCute3DScene(container, (scene) => {
+                        const geometry = new THREE.BoxGeometry(2.8, 1.6, 1.8);
+                        const material = new THREE.MeshStandardMaterial({ color: 0x5271FF, roughness: 0.3 });
+                        const mesh = new THREE.Mesh(geometry, material);
+                        scene.add(mesh);
+                        return mesh;
+                    });
+                }
+            }
+        ];
+
+        /* =========================================================
+           2. APP STATE & RENDERING
+           ========================================================= */
+        let currentTab = 'all';
+        let quizState = { index: 0, score: 0, questions: [] };
+
+        window.onload = () => {
+            updateTabCounts();
+            renderShapesGrid();
+        };
+
+        function updateTabCounts() {
+            document.getElementById('count-all').innerText = SHAPES.length;
+            document.getElementById('count-2d').innerText = SHAPES.filter(s => s.category === '2d').length;
+            document.getElementById('count-3d').innerText = SHAPES.filter(s => s.category === '3d').length;
+        }
+
+        function switchTab(tab) {
+            currentTab = tab;
+            document.querySelectorAll('.nav-tab').forEach(b => {
+                b.classList.remove('bg-kidsPurple', 'text-white', 'scale-105', 'shadow-md');
+                b.classList.add('text-slate-700');
+            });
+
+            const activeBtn = document.getElementById(`tab-${tab}`);
+            if (activeBtn) {
+                activeBtn.classList.add('bg-kidsPurple', 'text-white', 'scale-105', 'shadow-md');
+                activeBtn.classList.remove('text-slate-700');
+            }
+
+            const shapesSec = document.getElementById('shapesSection');
+            const quizSec = document.getElementById('quizSection');
+
+            if (tab === 'quiz') {
+                shapesSec.classList.add('hidden');
+                quizSec.classList.remove('hidden');
+                quizSec.classList.add('flex');
+                startQuizGame();
+            } else {
+                quizSec.classList.add('hidden');
+                quizSec.classList.remove('flex');
+                shapesSec.classList.remove('hidden');
+                renderShapesGrid();
+            }
+        }
+
+        function renderShapesGrid() {
+            const grid = document.getElementById('shapesSection');
+            grid.innerHTML = '';
+
+            const filtered = SHAPES.filter(s => currentTab === 'all' || s.category === currentTab);
+
+            filtered.forEach(shape => {
+                const card = document.createElement('div');
+                card.className = `kids-card bg-white rounded-3xl p-5 shadow-lg border-4 ${shape.bgColor} flex flex-col justify-between relative overflow-hidden`;
+
+                card.innerHTML = `
+                    <!-- Category Badge -->
+                    <div class="flex justify-between items-center mb-3">
+                        <span class="text-xs font-black px-3 py-1 rounded-full text-white shadow-sm" style="background-color: ${shape.color}">
+                            ${shape.category === '2d' ? 'ثنائي الأبعاد 2D' : 'ثلاثي الأبعاد 3D'}
+                        </span>
+                        <!-- Audio Greeting Button -->
+                        <button onclick="playAudioText('${shape.greeting}')" class="w-10 h-10 rounded-full bg-kidsYellow hover:scale-110 active:scale-90 flex items-center justify-center text-slate-800 text-lg shadow transition" title="استمع للشكل">
+                            🗣️
+                        </button>
+                    </div>
+
+                    <!-- Shape Graphic Canvas / SVG -->
+                    <div class="canvas-3d-box flex items-center justify-center p-2 mb-4" id="graphic-box-${shape.id}">
+                        ${shape.drawSVG ? shape.drawSVG() : ''}
+                    </div>
+
+                    <!-- Titles -->
+                    <div class="text-center mb-3">
+                        <h3 class="text-2xl font-black text-slate-800">${shape.nameAr}</h3>
+                        <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">${shape.nameEn}</p>
+                    </div>
+
+                    <!-- Speech Greeting Bubble -->
+                    <div class="bg-white/80 backdrop-blur border-2 border-slate-200 p-3 rounded-2xl text-xs font-bold text-slate-700 text-center mb-4 leading-relaxed shadow-inner">
+                        "${shape.greeting}"
+                    </div>
+
+                    <!-- Specs List -->
+                    <div class="grid grid-cols-1 gap-1.5 bg-slate-50 p-3 rounded-2xl mb-4 text-xs font-bold">
+                        ${shape.specs.map(sp => `
+                            <div class="flex justify-between items-center text-slate-700">
+                                <span class="text-slate-500">${sp.label}:</span>
+                                <span class="text-kidsPurple font-black">${sp.val}</span>
+                            </div>
+                        `).join('')}
+                    </div>
+
+                    <!-- Easy Interactive Calculator -->
+                    <div class="bg-slate-100/80 p-3.5 rounded-2xl border border-slate-200">
+                        <p class="text-xs font-extrabold text-slate-700 mb-2 flex items-center gap-1">
+                            <span>🧮 ${shape.calcText}</span>
+                        </p>
+                        <div class="grid grid-cols-2 gap-2 mb-2">
+                            ${shape.inputs.map(inp => `
+                                <div>
+                                    <label class="block text-[10px] font-bold text-slate-500 mb-1">${inp.label}</label>
+                                    <input type="number" id="inp-${shape.id}-${inp.id}" value="${inp.default}" oninput="calcShape('${shape.id}')"
+                                        class="w-full px-2 py-1 text-xs font-bold rounded-xl border-2 border-slate-300 focus:border-kidsPurple focus:outline-none text-center bg-white">
+                                </div>
+                            `).join('')}
+                        </div>
+                        <div id="res-${shape.id}" class="bg-slate-900 text-kidsYellow p-2 rounded-xl text-xs font-black text-center shadow-inner">
+                            <!-- Calculation Result -->
+                        </div>
+                    </div>
+                `;
+
+                grid.appendChild(card);
+
+                // Render 3D Canvas if shape is 3D
+                if (shape.category === '3d' && shape.init3D) {
+                    const box = document.getElementById(`graphic-box-${shape.id}`);
+                    shape.init3D(box);
+                }
+
+                // Initial Calc
+                calcShape(shape.id);
+            });
+        }
+
+        /* =========================================================
+           3. EASY CALCULATOR
+           ========================================================= */
+        function calcShape(shapeId) {
+            const shape = SHAPES.find(s => s.id === shapeId);
+            if (!shape) return;
+
+            const vals = {};
+            shape.inputs.forEach(inp => {
+                const el = document.getElementById(`inp-${shapeId}-${inp.id}`);
+                vals[inp.id] = el ? parseFloat(el.value) || 0 : inp.default;
+            });
+
+            const res = shape.calculate(vals);
+            const resBox = document.getElementById(`res-${shapeId}`);
+            if (resBox) {
+                resBox.innerHTML = Object.entries(res).map(([k, v]) => `${k}: <span class="text-white">${v}</span>`).join(' | ');
+            }
+        }
+
+        /* =========================================================
+           4. THREE.JS 3D SCENE CREATOR FOR KIDS
+           ========================================================= */
+        function createCute3DScene(container, meshBuilder) {
+            if (!container) return;
+            container.innerHTML = '';
+
+            const scene = new THREE.Scene();
+            const camera = new THREE.PerspectiveCamera(45, container.clientWidth / container.clientHeight, 0.1, 1000);
+            camera.position.set(3.2, 2.5, 4);
+
+            const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+            renderer.setSize(container.clientWidth, container.clientHeight);
+            renderer.setPixelRatio(window.devicePixelRatio);
+            container.appendChild(renderer.domElement);
+
+            // Vibrant Lights
+            const ambLight = new THREE.AmbientLight(0xffffff, 0.8);
+            scene.add(ambLight);
+
+            const dirLight = new THREE.DirectionalLight(0xffffff, 0.7);
+            dirLight.position.set(5, 8, 5);
+            scene.add(dirLight);
+
+            const mesh = meshBuilder(scene);
+
+            const controls = new THREE.OrbitControls(camera, renderer.domElement);
+            controls.enableDamping = true;
+            controls.dampingFactor = 0.05;
+            controls.enableZoom = false;
+
+            function animate() {
+                requestAnimationFrame(animate);
+                if (mesh) {
+                    mesh.rotation.y += 0.01;
+                }
+                controls.update();
+                renderer.render(scene, camera);
+            }
+            animate();
+        }
+
+        /* =========================================================
+           5. AUDIO SPEECH SYNTHESIS (Arabic Kid Voice)
+           ========================================================= */
+        function playAudioText(text) {
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel(); // Stop current speech
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.lang = 'ar-SA';
+                utterance.pitch = 1.3; // Higher pitch for kids vibe
+                utterance.rate = 0.9;  // Gentle pace
+                window.speechSynthesis.speak(utterance);
+            } else {
+                alert('عفواً، متصفحك لا يدعم قراءة الصوت.');
+            }
+        }
+
+        /* =========================================================
+           6. QUIZ / GAME ENGINE FOR KIDS
+           ========================================================= */
+        function startQuizGame() {
+            // Shuffle shapes for quiz
+            const shuffled = [...SHAPES].sort(() => 0.5 - Math.random());
+            quizState = {
+                index: 0,
+                score: 0,
+                questions: shuffled.slice(0, 5) // 5 questions
+            };
+
+            document.getElementById('quizTotal').innerText = quizState.questions.length;
+            renderQuizQuestion();
+        }
+
+        function renderQuizQuestion() {
+            const current = quizState.questions[quizState.index];
+            document.getElementById('quizCurrent').innerText = quizState.index + 1;
+            document.getElementById('quizScore').innerText = quizState.score;
+            document.getElementById('quizNextBtn').classList.add('hidden');
+
+            const graphicBox = document.getElementById('quizShapeGraphic');
+            graphicBox.innerHTML = '';
+
+            if (current.drawSVG) {
+                graphicBox.innerHTML = current.drawSVG();
+            } else if (current.init3D) {
+                const box3d = document.createElement('div');
+                box3d.className = 'canvas-3d-box w-full h-full';
+                graphicBox.appendChild(box3d);
+                current.init3D(box3d);
+            }
+
+            document.getElementById('quizHint').innerText = current.greeting;
+
+            // Generate options
+            const wrongOptions = SHAPES.filter(s => s.id !== current.id).sort(() => 0.5 - Math.random()).slice(0, 3);
+            const allOptions = [current, ...wrongOptions].sort(() => 0.5 - Math.random());
+
+            const optionsContainer = document.getElementById('quizOptions');
+            optionsContainer.innerHTML = '';
+
+            allOptions.forEach(opt => {
+                const btn = document.createElement('button');
+                btn.className = 'quiz-opt-btn w-full py-3.5 px-4 rounded-2xl bg-slate-100 hover:bg-kidsYellow text-slate-800 font-extrabold text-lg border-2 border-slate-200 transition shadow-sm active:scale-95';
+                btn.innerText = opt.nameAr;
+                btn.onclick = () => checkQuizAnswer(opt.id, current.id, btn);
+                optionsContainer.appendChild(btn);
+            });
+        }
+
+        function checkQuizAnswer(selectedId, correctId, btnEl) {
+            const allBtns = document.querySelectorAll('.quiz-opt-btn');
+            allBtns.forEach(b => b.disabled = true);
+
+            if (selectedId === correctId) {
+                btnEl.classList.remove('bg-slate-100');
+                btnEl.classList.add('bg-kidsGreen', 'text-white', 'border-teal-600');
+                quizState.score += 10;
+                document.getElementById('quizScore').innerText = quizState.score;
+
+                playAudioText('إجابة ممتازة وصحيحة! أبدعت يا بطل!');
+                confetti({ particleCount: 60, spread: 70, origin: { y: 0.6 } });
+            } else {
+                btnEl.classList.remove('bg-slate-100');
+                btnEl.classList.add('bg-red-500', 'text-white', 'border-red-700');
+                playAudioText('حاول مرة أخرى في السؤال التالي يا بطل!');
+            }
+
+            document.getElementById('quizNextBtn').classList.remove('hidden');
+        }
+
+        function nextQuizQuestion() {
+            quizState.index++;
+            if (quizState.index < quizState.questions.length) {
+                renderQuizQuestion();
+            } else {
+                // Game Finished Celebration
+                const box = document.getElementById('quizQuestionBox');
+                box.innerHTML = `
+                    <div class="text-center py-6">
+                        <div class="text-6xl mb-3">🏆🎉</div>
+                        <h3 class="text-3xl font-black text-kidsPurple mb-2">تهانينا يا بطل الأشكال!</h3>
+                        <p class="text-lg font-bold text-slate-600">جمعت ${quizState.score} نقطة من ${quizState.questions.length * 10}!</p>
+                    </div>
+                `;
+                document.getElementById('quizOptions').innerHTML = '';
+                document.getElementById('quizNextBtn').innerText = 'إعادة اللعبة 🔄';
+                document.getElementById('quizNextBtn').onclick = () => startQuizGame();
+                confetti({ particleCount: 120, spread: 100 });
+            }
+        }
+
+        /* =========================================================
+           7. PRINTABLE WORKBOOK EXPORTER
+           ========================================================= */
+        function prepareAndPrint() {
+            const printList = document.getElementById('printSheetList');
+            printList.innerHTML = '';
+
+            SHAPES.forEach(shape => {
+                const div = document.createElement('div');
+                div.className = 'print-card border-2 p-4 rounded-xl';
+                div.innerHTML = `
+                    <h3 class="text-xl font-black text-slate-800 mb-1">${shape.nameAr} (${shape.nameEn})</h3>
+                    <p class="text-xs font-bold text-slate-600 mb-2 font-mono">${shape.greeting}</p>
+                    <ul class="text-xs space-y-1 text-slate-700 font-bold">
+                        ${shape.specs.map(s => `<li>• ${s.label}: ${s.val}</li>`).join('')}
+                    </ul>
+                `;
+                printList.appendChild(div);
+            });
+
+            window.print();
+        }
+    </script>
+</body>
+</html>
